@@ -5,20 +5,23 @@ const tokens = (n) => {
     return ethers.utils.parseUnits(n.toString(), "ether")
 }
 describe("Token contract", () => {
-    let token
-    
+    let token, accounts, deployer
+
     beforeEach( async () => {
         //Before each test this gets ran...
         //fetch token from blockchain
         const Token = await ethers.getContractFactory("Token");
         token = await Token.deploy("Monie", "MON", "1000000");
+
+        accounts = await ethers.getSigners();
+        deployer = accounts[0];
     })
 
     describe("Deployment", () => {
         const name = "Monie";
         const symbol = "MON";
         const decimals = 18;
-        const totalSupply = "1000000";
+        const totalSupply = tokens("1000000");
 
         it("has the correct name", async () => {
             //check that name is correct
@@ -37,7 +40,13 @@ describe("Token contract", () => {
     
         it("has the correct decimals", async () => {
             //check that symbol is correct
-            expect(await token.totalSupply()).to.equal(tokens(totalSupply));
+            expect(await token.totalSupply()).to.equal(totalSupply);
+        })
+
+        it("assigns total supply to deployer", async () => {
+            //check that symbol is correct
+            console.log(deployer)
+            expect(await token.balanceOf(deployer.address)).to.equal(totalSupply);
         })
     })
 
