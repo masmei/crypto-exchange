@@ -1,23 +1,63 @@
-import logo from './logo.svg';
-import './App.css';
+import { useEffect } from 'react';
+import { useDispatch } from 'react-redux';
+import config from './config.json';
+
+import {
+  loadProvider,
+  loadNetwork,
+  loadAccount,
+  loadToken
+} from './store/interactions';
 
 function App() {
+  const dispatch = useDispatch()
+
+  const loadBlockchainData = async () => {
+    await loadAccount(dispatch)
+
+    // Connect Ethers to blockchain
+    const provider = loadProvider(dispatch)
+    const chainId = await loadNetwork(provider, dispatch)
+
+    // Token Smart Contract
+    await loadToken(provider, config[chainId].monie.address, dispatch)
+  }
+
+  useEffect(() => {
+    loadBlockchainData()
+  })
+
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+
+      {/* Navbar */}
+
+      <main className='exchange grid'>
+        <section className='exchange__section--left grid'>
+
+          {/* Markets */}
+
+          {/* Balance */}
+
+          {/* Order */}
+
+        </section>
+        <section className='exchange__section--right grid'>
+
+          {/* PriceChart */}
+
+          {/* Transactions */}
+
+          {/* Trades */}
+
+          {/* OrderBook */}
+
+        </section>
+      </main>
+
+      {/* Alert */}
+
     </div>
   );
 }
